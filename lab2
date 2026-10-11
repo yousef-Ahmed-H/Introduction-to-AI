@@ -1,0 +1,104 @@
+from collections import deque
+from queue import LifoQueue
+
+
+# 1) BFS Tree
+def bfs_tree(tree, root, goal, trace=None):
+    queue = deque()
+    queue.append([root])
+    visited = []
+
+    while queue:
+        path = queue.popleft()
+        node = path[-1]
+        visited.append(node)
+
+        if node == goal:
+            record(trace, node, [p[-1] for p in queue], visited)
+            return path
+
+        for child in tree[node]:
+            queue.append(path + [child])
+
+        record(trace, node, [p[-1] for p in queue], visited)
+
+    return None
+
+
+# 2) BFS Graph
+def bfs_graph(graph, start, goal, trace=None):
+    queue = [[start]]
+    visited = []
+
+    while queue:
+        path = queue.pop(0)
+        node = path[-1]
+
+        if node in visited:
+            record(trace, node, [p[-1] for p in queue], visited)
+            continue
+
+        visited.append(node)
+
+        if node == goal:
+            record(trace, node, [p[-1] for p in queue], visited)
+            return path
+
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                queue.append(path + [neighbor])
+
+        record(trace, node, [p[-1] for p in queue], visited)
+
+    return None
+
+
+# 3) DFS Tree
+def dfs_tree(tree, root, goal, trace=None):
+    stack = LifoQueue()
+    stack.put([root])
+    visited = []
+
+    while not stack.empty():
+        path = stack.get()
+        node = path[-1]
+        visited.append(node)
+
+        if node == goal:
+            record(trace, node, [p[-1] for p in stack.queue], visited)
+            return path
+
+        for child in tree[node]:
+            stack.put(path + [child])
+
+        record(trace, node, [p[-1] for p in stack.queue], visited)
+
+    return None
+
+
+# 4) DFS Graph
+def dfs_graph(graph, start, goal, trace=None):
+    stack = [[start]]
+    visited = []
+
+    while stack:
+        path = stack.pop()
+        node = path[-1]
+
+        if node in visited:
+            record(trace, node, [p[-1] for p in stack], visited)
+            continue
+
+        visited.append(node)
+
+        if node == goal:
+            record(trace, node, [p[-1] for p in stack], visited)
+            return path
+
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                stack.append(path + [neighbor])
+
+        record(trace, node, [p[-1] for p in stack], visited)
+
+    return None
